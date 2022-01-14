@@ -20,7 +20,7 @@ corresponding_y = lambda x: intercept + (slope*x)
 data = pd.read_csv('simple_linear_regressions_data.csv')
 source = ColumnDataSource(data=data)
 
-p = figure(title=f'Annual income vs. percent of adults who report\nconsuming vegetables fewer than once daily. R2 score: {score}', height=400, sizing_mode= "stretch_width", tools='', toolbar_location=None, x_range=(0,95000))
+p = figure(title=f'Annual income vs. percent of adults who report\nconsuming vegetables fewer than once daily.\nR2: {score}', height=400, sizing_mode= "stretch_width", tools='', toolbar_location=None, x_range=(0,95000))
 p.xgrid.grid_line_color = None
 p.ygrid.grid_line_color = None
 p.outline_line_color = None
