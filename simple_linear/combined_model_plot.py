@@ -15,6 +15,7 @@ with open('simple_linear_regressions.json') as f:
     model = json.load(f)
 slope = model['coefficients'][0]
 intercept = model['intercept']
+score = model['score']
 corresponding_y = lambda x: intercept + (slope*x)
 
 #Load poly model, extract components
@@ -24,6 +25,7 @@ with open('poly_linear_regression.json') as f:
 #Poly
 coef_x, coef_x2 = poly_model['coefficients'][0], poly_model['coefficients'][1]
 poly_intercept = poly_model['intercept']
+poly_score = poly_model['score']
 poly_corresponding_y = lambda x: poly_intercept + (coef_x*x) + (coef_x2*x*x)
 
 data = pd.read_csv('simple_linear_regressions_data.csv')
@@ -37,7 +39,7 @@ p.outline_line_color = None
 
 # Scatter of original data
 jitter_radius = 3000
-p.circle(x=jitter('income_val', jitter_radius), y='value', source=source, fill_alpha=0.05, line_alpha=0.05, size=7)
+p.circle(x=jitter('income_val', jitter_radius), y='value', source=source, fill_alpha=0.05, line_alpha=0.05, size=7, legend_label="Original data")
 
 # Line provided by models
 max_x = max(data['income_val']) + jitter_radius/2
@@ -61,7 +63,7 @@ slider = Slider(start=0, end=max_x, value=initial_x, step=1000, title="Select In
 labels = LabelSet(x='x', y='y', text='labels',
               x_offset=5, y_offset=5, source=slider_coordinates, render_mode='canvas', text_color="purple")
 poly_labels = LabelSet(x='x', y='poly_y', text='poly_labels',
-              x_offset=5, y_offset=-20, source=slider_coordinates, render_mode='canvas', text_color="red")
+              x_offset=5, y_offset=-23, source=slider_coordinates, render_mode='canvas', text_color="red")
 p.add_layout(labels)
 p.add_layout(poly_labels)
 
@@ -88,8 +90,8 @@ callback = CustomJS(
         labels.text_align = text_align;
     }
 
-    poly_labels.y_offset = poly_y > y ? 5 : -20;
-    labels.y_offset = poly_y > y ? -20 : 5;
+    poly_labels.y_offset = poly_y > y ? 5 : -23;
+    labels.y_offset = poly_y > y ? -23 : 5;
 
     slider_data.data = {
         x: [x],
@@ -105,9 +107,9 @@ slider.js_on_change('value', callback)
 
 columns = column([p, slider], sizing_mode='stretch_width')
 
-html = file_html(columns, resources=CDN)
-with open('combined_linear.html', 'w') as f:
-    f.writelines(html)
+# html = file_html(columns, resources=CDN)
+# with open('combined_linear.html', 'w') as f:
+#     f.writelines(html)
 
 script, div = components(columns)
 resources = CDN.render()
